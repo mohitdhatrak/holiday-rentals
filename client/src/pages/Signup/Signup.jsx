@@ -69,7 +69,6 @@ export function Signup() {
                             label="Name"
                             name="name"
                             autoComplete="name"
-                            autoFocus
                             onChange={() => setFeedback("")}
                         />
                         <TextField

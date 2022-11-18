@@ -104,9 +104,9 @@ export function Login() {
                                 variant="contained"
                                 sx={{ mt: 3 }}
                             >
-                                Sign In
+                                Log In
                             </Button>
-                            <Button onClick={() => navigate("/signup")}>
+                            <Button onClick={() => navigate("/user-role")}>
                                 Don't have an account? Sign up
                             </Button>
                         </Stack>
