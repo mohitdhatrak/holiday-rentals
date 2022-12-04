@@ -21,7 +21,10 @@ export function Home() {
                 >
                     Welcome to holiday rentals!
                 </Typography>
-                <Button variant="contained" onClick={() => navigate("/login")}>
+                <Button
+                    variant="contained"
+                    onClick={() => navigate("/explore")}
+                >
                     Explore
                 </Button>
             </Stack>

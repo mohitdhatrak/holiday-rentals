@@ -14,32 +14,47 @@ import { ThemeProvider } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import { validateForm } from "../../utils/validateForm";
+import axios from "axios";
 
 export function Login() {
-    const [login, setLogin] = useState(false);
     const [feedback, setFeedback] = useState("");
 
     const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault(); // prevents page refresh
 
-        const data = new FormData(event.currentTarget);
+        const formData = new FormData(event.currentTarget);
 
-        const isValid = validateForm(data, setFeedback, "login");
+        const isValid = validateForm(formData, setFeedback, "login");
 
         if (isValid) {
             // frontend validation done, all fields are valid, do further process here
-            console.log({
-                email: data.get("email"),
-                password: data.get("password"),
-            });
+
+            try {
+                const {
+                    data: { userId, message, jwtToken },
+                } = await axios.post(
+                    `${process.env.REACT_APP_API_ENDPOINT}/login`,
+                    {
+                        email: formData.get("email"),
+                        password: formData.get("password"),
+                    },
+                    { withCredentials: true }
+                );
+                // setFeedback(message);
+                if (userId && jwtToken) {
+                    navigate("/");
+                }
+            } catch (error) {
+                // console.log(error);
+            }
         }
     };
 
     return (
         <ThemeProvider theme={theme}>
-            <Navbar login={login} />
+            <Navbar />
 
             <Container component="main" maxWidth="xs">
                 <Box

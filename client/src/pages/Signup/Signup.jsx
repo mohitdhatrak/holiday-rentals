@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navbar } from "../../components/Navbar";
 import { theme } from "../../styles";
 import Button from "@mui/material/Button";
@@ -12,30 +12,56 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { validateForm } from "../../utils/validateForm";
+import axios from "axios";
 
 export function Signup() {
     const [feedback, setFeedback] = useState("");
 
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const handleSubmit = (event) => {
+    useEffect(() => {
+        if (location.state === null) {
+            navigate("/user-role"); // still problem when user hits previous page or next page using browser arrows
+        }
+    }, []);
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const data = new FormData(event.currentTarget);
+        const formData = new FormData(event.currentTarget);
 
-        const isValid = validateForm(data, setFeedback, "signup");
+        const isValid = validateForm(formData, setFeedback, "signup");
 
         if (isValid) {
             // frontend validation done, all fields are valid, do further process here
-            console.log({
-                name: data.get("name"),
-                email: data.get("email"),
-                phone: data.get("phone"),
-                password: data.get("password"),
-                confirmPassword: data.get("confirmPassword"),
-            });
+
+            try {
+                const {
+                    data: { userId, message, jwtToken },
+                } = await axios.post(
+                    `${process.env.REACT_APP_API_ENDPOINT}/signup`,
+                    {
+                        userData: {
+                            name: formData.get("name"),
+                            email: formData.get("email"),
+                            phone: formData.get("phone"),
+                            location: formData.get("location"),
+                            password: formData.get("password"),
+                            role: location.state,
+                        },
+                    },
+                    { withCredentials: true }
+                );
+                // setFeedback(message);
+                if (userId && jwtToken) {
+                    navigate("/");
+                }
+            } catch (error) {
+                // console.log(error);
+            }
         }
     };
 
@@ -70,6 +96,7 @@ export function Signup() {
                             name="name"
                             autoComplete="name"
                             onChange={() => setFeedback("")}
+                            autoFocus
                         />
                         <TextField
                             margin="normal"
@@ -88,6 +115,15 @@ export function Signup() {
                             label="Phone Number"
                             name="phone"
                             autoComplete="phone"
+                            onChange={() => setFeedback("")}
+                        />
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="location"
+                            label="Location"
+                            name="location"
+                            autoComplete="location"
                             onChange={() => setFeedback("")}
                         />
                         <TextField

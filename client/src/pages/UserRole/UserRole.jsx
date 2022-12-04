@@ -79,7 +79,7 @@ export function UserRole() {
                             variant="contained"
                             sx={{ mt: 3 }}
                             disabled={role === ""}
-                            onClick={() => navigate("/signup")}
+                            onClick={() => navigate("/signup", { state: role })}
                         >
                             Continue
                         </Button>
