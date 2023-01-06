@@ -7,6 +7,7 @@ const login = require("./routers/login.router");
 const signup = require("./routers/signup.router");
 const user = require("./routers/user.router");
 const { requireAuth } = require("./middlewares/auth.middleware");
+const { resHeaders } = require("./middlewares/resHeader.middleware");
 
 const app = express();
 
@@ -30,7 +31,7 @@ if (process.env.NODE_ENV === "development") {
 
 connectToMongoDB();
 
-app.use("/login", login);
+app.use("/login", resHeaders, login);
 app.use("/signup", signup);
 // app.use(requireAuth); // all routes after this are protected, can be only accessed by authenticated users
 app.use("/user", requireAuth, user);
