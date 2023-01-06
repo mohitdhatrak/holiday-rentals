@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+require("dotenv").config();
 
 const { connectToMongoDB } = require("./db/db.connect");
 const login = require("./routers/login.router");
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV === "development") {
 connectToMongoDB();
 
 app.use("/login", resHeaders, login);
-app.use("/signup", signup);
+app.use("/signup",resHeaders, signup);
 // app.use(requireAuth); // all routes after this are protected, can be only accessed by authenticated users
 app.use("/user", requireAuth, user);
 

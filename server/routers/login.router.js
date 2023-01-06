@@ -24,18 +24,27 @@ router.route("/").post(async (req, res) => {
         } else {
             const jwtToken = createJwtToken(user._id);
 
-            res.cookie("jwtToken", jwtToken, {
+            const cookieObject = {
                 maxAge: process.env.TOKEN_EXPIRES_IN,
                 // httpOnly: true,
                 // adding samesite and secure to ensure cookies work in https
                 sameSite: "none",
                 secure: true,
-            });
+            };
+
+            // res.cookie("jwtToken", jwtToken, {
+            //     maxAge: process.env.TOKEN_EXPIRES_IN,
+            //     httpOnly: true,
+            //     // adding samesite and secure to ensure cookies work in https
+            //     sameSite: "none",
+            //     secure: true,
+            // });
 
             res.status(200).json({
                 userId: user._id,
                 message: "Logged in successfully!",
                 jwtToken,
+                cookieObject,
             });
         }
     } catch (error) {

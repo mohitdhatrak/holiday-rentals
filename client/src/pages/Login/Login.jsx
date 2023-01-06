@@ -15,6 +15,7 @@ import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import { validateForm } from "../../utils/validateForm";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export function Login() {
     const [feedback, setFeedback] = useState("");
@@ -33,7 +34,7 @@ export function Login() {
 
             try {
                 const {
-                    data: { userId, message, jwtToken },
+                    data: { userId, message, jwtToken, cookieObject },
                 } = await axios.post(
                     `${process.env.REACT_APP_API_ENDPOINT}/login`,
                     {
@@ -42,6 +43,8 @@ export function Login() {
                     },
                     { withCredentials: true }
                 );
+                Cookies.set("jwtToken", jwtToken, cookieObject);
+
                 // setFeedback(message);
                 if (userId && jwtToken) {
                     navigate("/");
