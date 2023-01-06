@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navbar } from "../../components/Navbar";
 import { theme } from "../../styles";
 import Button from "@mui/material/Button";
@@ -26,6 +26,18 @@ export function UserRole() {
     };
 
     const navigate = useNavigate();
+
+    // useEffect(() => {
+    // is this the correct way to avoid navigating to a page
+    // read about window.history, pushstate, location.replace
+    // window.addEventListener("popstate", (e) => {
+    //     console.log("hi");
+    //     if (e.target.document.URL.includes("/signup")) {
+    //         navigate("/user-role");
+    //
+    //     }
+    // });
+    // }, []);
 
     return (
         <ThemeProvider theme={theme}>
@@ -61,15 +73,21 @@ export function UserRole() {
                                 onChange={handleChange}
                             >
                                 <FormControlLabel
-                                    value="host-rental"
-                                    control={<Radio />}
-                                    label="Hosting a rental"
-                                />
-                                <FormControlLabel
-                                    value="book-rental"
+                                    value="book"
                                     control={<Radio />}
                                     label="Booking a rental"
                                 />
+                                <FormControlLabel
+                                    value="host"
+                                    control={<Radio />}
+                                    label="Hosting a rental"
+                                />
+                                {/* Can't allow anyone to create an admin account! */}
+                                {/* <FormControlLabel
+                                    value="admin"
+                                    control={<Radio />}
+                                    label="Admin account"
+                                /> */}
                             </RadioGroup>
                         </FormControl>
 

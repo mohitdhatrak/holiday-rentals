@@ -32,7 +32,7 @@ connectToMongoDB();
 
 app.use("/login", login);
 app.use("/signup", signup);
-app.use(requireAuth); // all routes after this are protected, can be only accessed by authenticated users
-app.use("/user", user);
+// app.use(requireAuth); // all routes after this are protected, can be only accessed by authenticated users
+app.use("/user", requireAuth, user);
 
-app.listen(7000, () => console.log("Listening on port 7000"));
+app.listen(process.env.PORT, () => console.log("Listening on port 5000"));

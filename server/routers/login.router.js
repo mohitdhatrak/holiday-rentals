@@ -1,9 +1,14 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
+const passport = require("passport");
 
 const { User } = require("../models/user.model");
 const { createJwtToken } = require("../utils/createJwtToken");
+
+const app = express();
+
+app.use(passport.initialize());
 
 router.route("/").post(async (req, res) => {
     const { email, password } = req.body;

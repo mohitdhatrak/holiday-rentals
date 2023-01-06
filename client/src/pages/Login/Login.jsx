@@ -47,7 +47,8 @@ export function Login() {
                     navigate("/");
                 }
             } catch (error) {
-                // console.log(error);
+                // console.log(error.response.data.message);
+                setFeedback(error.response.data.message);
             }
         }
     };
