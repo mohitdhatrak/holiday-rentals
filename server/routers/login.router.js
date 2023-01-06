@@ -27,6 +27,9 @@ router.route("/").post(async (req, res) => {
             res.cookie("jwtToken", jwtToken, {
                 maxAge: process.env.TOKEN_EXPIRES_IN,
                 // httpOnly: true,
+                // adding samesite and secure to ensure cookies work in https
+                sameSite: "none",
+                secure: true,
             });
 
             res.status(200).json({
