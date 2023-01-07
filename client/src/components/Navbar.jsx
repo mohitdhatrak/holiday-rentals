@@ -13,14 +13,19 @@ const BtnsBeforeLogin = () => {
 
     return location.pathname === "/login" ||
         location.pathname === "/signup" ||
-        location.pathname === "/user-role" ? (
+        location.pathname === "/user/role" ? (
         <Button color="inherit" onClick={() => navigate("/")}>
             Back to home
         </Button>
     ) : (
-        <Button color="inherit" onClick={() => navigate("/login")}>
-            Login
-        </Button>
+        <div>
+            <Button color="inherit" onClick={() => navigate("/user/role")}>
+                Signup
+            </Button>
+            <Button color="inherit" onClick={() => navigate("/login")}>
+                Login
+            </Button>
+        </div>
     );
 };
 
@@ -51,10 +56,10 @@ export function Navbar() {
 
     useEffect(() => {
         if (
-            (document.cookie.includes("jwtToken") &&
-                location.pathname === "/login") ||
-            location.pathname === "/signup" ||
-            location.pathname === "/user-role"
+            document.cookie.includes("jwtToken") &&
+            (location.pathname === "/login" ||
+                location.pathname === "/signup" ||
+                location.pathname === "/user/role")
         ) {
             navigate("/");
         }

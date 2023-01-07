@@ -25,8 +25,10 @@ export function Signup() {
 
     useEffect(() => {
         if (location.state === null) {
-            navigate("/user-role"); // still problem when user hits previous page or next page using browser arrows
-            // solved this issue in useeffect of UserRole page
+            navigate("/user/role"); // still problem when user hits previous page or next page using browser arrows
+            // solve this issue in useeffect of UserRole page
+        } else {
+            navigate("/signup");
         }
     }, []);
 

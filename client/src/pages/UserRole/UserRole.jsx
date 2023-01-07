@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navbar } from "../../components/Navbar";
 import { theme } from "../../styles";
 import Button from "@mui/material/Button";
@@ -19,7 +19,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
 export function UserRole() {
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState(null);
 
     const handleChange = (event) => {
         setRole(event.target.value);
@@ -33,7 +33,7 @@ export function UserRole() {
     // window.addEventListener("popstate", (e) => {
     //     console.log("hi");
     //     if (e.target.document.URL.includes("/signup")) {
-    //         navigate("/user-role");
+    //         navigate("/user/role");
     //
     //     }
     // });
@@ -96,7 +96,7 @@ export function UserRole() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3 }}
-                            disabled={role === ""}
+                            disabled={role === null}
                             onClick={() => navigate("/signup", { state: role })}
                         >
                             Continue

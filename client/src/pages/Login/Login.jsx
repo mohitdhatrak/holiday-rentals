@@ -125,7 +125,7 @@ export function Login() {
                             >
                                 Log In
                             </Button>
-                            <Button onClick={() => navigate("/user-role")}>
+                            <Button onClick={() => navigate("/user/role")}>
                                 Don't have an account? Sign up
                             </Button>
                         </Stack>
