@@ -25,7 +25,8 @@ router.route("/").post(async (req, res) => {
             const jwtToken = createJwtToken(user._id);
 
             const cookieObject = {
-                maxAge: process.env.TOKEN_EXPIRES_IN,
+                // need to use expires not maxAge for js-cookie in frontend, type should be number not string
+                expires: Number(process.env.TOKEN_EXPIRES_IN),
                 // httpOnly: true,
                 // adding samesite and secure to ensure cookies work in https
                 sameSite: "none",

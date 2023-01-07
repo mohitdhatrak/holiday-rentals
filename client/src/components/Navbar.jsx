@@ -24,13 +24,13 @@ const BtnsBeforeLogin = () => {
     );
 };
 
+const logUserOut = (navigate) => {
+    Cookies.remove("jwtToken");
+    navigate("/login");
+};
+
 const BtnsAfterLogin = () => {
     const navigate = useNavigate();
-
-    const logUserOut = () => {
-        Cookies.remove("jwtToken");
-        navigate("/");
-    };
 
     return (
         <Button
@@ -38,7 +38,7 @@ const BtnsAfterLogin = () => {
             sx={{
                 color: "#27272a",
             }}
-            onClick={logUserOut}
+            onClick={() => logUserOut(navigate)}
         >
             Logout
         </Button>
@@ -51,10 +51,10 @@ export function Navbar() {
 
     useEffect(() => {
         if (
-            (location.pathname === "/login" ||
-                location.pathname === "/signup" ||
-                location.pathname === "/user-role") &&
-            document.cookie.includes("jwtToken")
+            (document.cookie.includes("jwtToken") &&
+                location.pathname === "/login") ||
+            location.pathname === "/signup" ||
+            location.pathname === "/user-role"
         ) {
             navigate("/");
         }
