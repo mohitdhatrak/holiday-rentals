@@ -8,7 +8,7 @@ function createJwtToken(userId) {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: `${process.env.TOKEN_EXPIRES_IN}ms`,
+            expiresIn: `${process.env.JWT_TOKEN_EXPIRES_IN}ms`,
         }
     );
 }
