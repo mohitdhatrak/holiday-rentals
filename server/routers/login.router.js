@@ -24,28 +24,35 @@ router.route("/").post(async (req, res) => {
         } else {
             const jwtToken = createJwtToken(user._id);
 
-            const cookieObject = {
-                // need to use expires not maxAge for js-cookie in frontend, type should be number not string
-                expires: Number(process.env.TOKEN_EXPIRES_IN),
-                // httpOnly: true,
-                // adding samesite and secure to ensure cookies work in https
-                sameSite: "none",
-                secure: true,
-            };
-
-            // res.cookie("jwtToken", jwtToken, {
-            //     maxAge: process.env.TOKEN_EXPIRES_IN,
-            //     httpOnly: true,
+            // const cookieObject = {
+            //     // need to use expires not maxAge for js-cookie in frontend, type should be number not string
+            //     expires: Number(process.env.COOKIE_EXPIRES_IN),
+            //     // httpOnly: true,
             //     // adding samesite and secure to ensure cookies work in https
             //     sameSite: "none",
             //     secure: true,
-            // });
+            // };
+
+            res.cookie("jwtToken", jwtToken, {
+                maxAge: process.env.COOKIE_EXPIRES_IN,
+                httpOnly: true,
+                // adding samesite and secure to ensure cookies work in https
+                sameSite: "none",
+                secure: true,
+            });
+
+            res.cookie("userId", user._id, {
+                maxAge: process.env.COOKIE_EXPIRES_IN,
+                httpOnly: true,
+                // adding samesite and secure to ensure cookies work in https
+                sameSite: "none",
+                secure: true,
+            });
 
             res.status(200).json({
                 userId: user._id,
                 message: "Logged in successfully!",
-                jwtToken,
-                cookieObject,
+                // jwtToken,
             });
         }
     } catch (error) {

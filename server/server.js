@@ -33,8 +33,10 @@ if (process.env.NODE_ENV === "development") {
 connectToMongoDB();
 
 app.use("/login", resHeaders, login);
-app.use("/signup",resHeaders, signup);
+app.use("/signup", resHeaders, signup);
 // app.use(requireAuth); // all routes after this are protected, can be only accessed by authenticated users
 app.use("/user", requireAuth, user);
 
-app.listen(process.env.PORT, () => console.log("Listening on port 5000"));
+app.listen(process.env.PORT, () =>
+    console.log(`Listening on port ${process.env.PORT}`)
+);

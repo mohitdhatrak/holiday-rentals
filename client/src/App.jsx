@@ -4,8 +4,13 @@ import { Home } from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
 import { Signup } from "./pages/Signup/Signup";
 import { UserRole } from "./pages/UserRole/UserRole";
+import { useEffect } from "react";
 
 export function App() {
+    useEffect(() => {
+        // perform network call like login to set current user if jwt not expired
+    }, []);
+
     return (
         <Routes>
             <Route path="/" element={<Home />}></Route>
