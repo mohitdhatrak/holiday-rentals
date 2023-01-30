@@ -7,6 +7,7 @@ const { connectToMongoDB } = require("./db/db.connect");
 const login = require("./routers/login.router");
 const signup = require("./routers/signup.router");
 const user = require("./routers/user.router");
+const upload = require("./routers/upload.router");
 const { requireAuth } = require("./middlewares/auth.middleware");
 const { resHeaders } = require("./middlewares/resHeader.middleware");
 
@@ -36,6 +37,7 @@ app.use("/login", resHeaders, login);
 app.use("/signup", resHeaders, signup);
 // app.use(requireAuth); // all routes after this are protected, can be only accessed by authenticated users
 app.use("/user", requireAuth, user);
+app.use("/upload", requireAuth, upload);
 
 app.listen(process.env.PORT, () =>
     console.log(`Listening on port ${process.env.PORT}`)
