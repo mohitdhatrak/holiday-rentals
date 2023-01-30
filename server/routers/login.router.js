@@ -6,9 +6,23 @@ const passport = require("passport");
 const { User } = require("../models/user.model");
 const { createJwtToken } = require("../utils/createJwtToken");
 
-const app = express();
+// const app = express();
 
-app.use(passport.initialize());
+// app.use(passport.initialize());
+
+// app.get(
+//     "/auth/google",
+//     passport.authenticate("google", { scope: ["profile", "email"] })
+// );
+
+// app.get(
+//     "/auth/google/callback",
+//     passport.authenticate("google", { failureRedirect: "/login" }),
+//     function (req, res) {
+//         // Successful authentication, redirect home.
+//         res.redirect("/");
+//     }
+// );
 
 router.route("/").post(async (req, res) => {
     const { email, password } = req.body;
@@ -23,15 +37,6 @@ router.route("/").post(async (req, res) => {
             );
         } else {
             const jwtToken = createJwtToken(user._id);
-
-            // const cookieObject = {
-            //     // need to use expires not maxAge for js-cookie in frontend, type should be number not string
-            //     expires: Number(process.env.COOKIE_EXPIRES_IN),
-            //     // httpOnly: true,
-            //     // adding samesite and secure to ensure cookies work in https
-            //     sameSite: "none",
-            //     secure: true,
-            // };
 
             res.cookie("jwtToken", jwtToken, {
                 maxAge: process.env.COOKIE_EXPIRES_IN,

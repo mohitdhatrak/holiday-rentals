@@ -32,6 +32,9 @@ const userSchema = new Schema(
             type: String,
             required: [true, "User's role required!"],
         },
+        googleId: {
+            type: String,
+        },
     },
     {
         timestamps: true,

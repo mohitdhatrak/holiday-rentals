@@ -19,28 +19,17 @@ router.route("/").post(async (req, res) => {
 
             const jwtToken = createJwtToken(newUser._id);
 
-            const cookieObject = {
-                // need to use expires not maxAge for js-cookie in frontend, type should be number not string
-                expires: Number(process.env.COOKIE_EXPIRES_IN),
-                // httpOnly: true,
+            res.cookie("jwtToken", jwtToken, {
+                maxAge: process.env.COOKIE_EXPIRES_IN,
+                httpOnly: true,
                 // adding samesite and secure to ensure cookies work in https
                 sameSite: "none",
                 secure: true,
-            };
-
-            // res.cookie("jwtToken", jwtToken, {
-            //     maxAge: process.env.COOKIE_EXPIRES_IN,
-            //     // httpOnly: true,
-            //     // adding samesite and secure to ensure cookies work in https
-            //     sameSite: "none",
-            //     secure: true,
-            // });
+            });
 
             res.status(200).json({
                 userId: newUser._id,
                 message: "Account created successfully!",
-                jwtToken,
-                cookieObject,
             });
         } else {
             res.status(400).json({
