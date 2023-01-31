@@ -1,9 +1,15 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const hostRentalSchema = new Schema(
+const rentalSchema = new Schema(
     {
         // todo: check if errors are being sent properly in catch block
+        hostId: {
+            // type: ObjectId,
+            type: String,
+            unique: true,
+            required: true,
+        },
         title: {
             type: String,
             required: [true, "House/hotel title required!"],
@@ -17,9 +23,10 @@ const hostRentalSchema = new Schema(
             type: String,
             required: [true, "House/hotel price required!"],
         },
-        // pictures: {
-        //     type: String,
-        // },
+        pictures: {
+            type: String,
+        },
+        // should rules be an array?
         rules: {
             type: String,
             required: [true, "House/hotel rules required!"],
@@ -28,17 +35,26 @@ const hostRentalSchema = new Schema(
             type: String,
             required: [true, "House/hotel location required!"],
         },
-        howToGetThere: {
+        transport: {
             type: String,
+            required: [true, "House/hotel modes of transport required!"],
         },
-        // should availability type be a Date?
-        availability: {
-            type: String,
+        // should these types be a Date or string?
+        beginDate: {
+            type: Date,
+            required: [true, "House/hotel availability details required!"],
+        },
+        endDate: {
+            type: Date,
             required: [true, "House/hotel availability details required!"],
         },
         // number of guests or number of rooms etc
         accomodation: {
             type: String,
+        },
+        ammenities: {
+            type: String,
+            required: [true, "House/hotel ammenities details required!"],
         },
         ratings: {
             type: String,
@@ -49,6 +65,6 @@ const hostRentalSchema = new Schema(
     }
 );
 
-const HostRental = mongoose.model("HostRental", hostRentalSchema);
+const Rental = mongoose.model("Rental", rentalSchema);
 
-module.exports = { HostRental };
+module.exports = { Rental };

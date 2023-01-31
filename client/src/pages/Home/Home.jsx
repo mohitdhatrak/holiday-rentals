@@ -23,7 +23,7 @@ export function Home() {
                 </Typography>
                 <Button
                     variant="contained"
-                    onClick={() => navigate("/explore")}
+                    onClick={() => navigate("/rental-listing")}
                 >
                     Explore
                 </Button>

@@ -3,10 +3,6 @@ import { Navbar } from "../../components/Navbar";
 import { theme } from "../../styles";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -15,9 +11,23 @@ import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import { validateForm } from "../../utils/validateForm";
 import axios from "axios";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 
 export function Login() {
     const [feedback, setFeedback] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     const navigate = useNavigate();
 
@@ -88,17 +98,41 @@ export function Login() {
                             autoFocus
                             onChange={() => setFeedback("")}
                         />
-                        <TextField
-                            margin="normal"
-                            required
+                        <FormControl
                             fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            onChange={() => setFeedback("")}
-                        />
+                            variant="outlined"
+                            required
+                            margin="normal"
+                        >
+                            <InputLabel htmlFor="outlined-adornment-password">
+                                Password
+                            </InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-password"
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={
+                                                handleMouseDownPassword
+                                            }
+                                            edge="end"
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                name="password"
+                                label="Password"
+                                onChange={() => setFeedback("")}
+                            />
+                        </FormControl>
                         {/* <FormControlLabel
                             control={
                                 <Checkbox value="remember" color="primary" />

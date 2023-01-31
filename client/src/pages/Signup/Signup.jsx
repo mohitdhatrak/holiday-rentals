@@ -3,10 +3,6 @@ import { Navbar } from "../../components/Navbar";
 import { theme } from "../../styles";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -15,9 +11,22 @@ import Stack from "@mui/material/Stack";
 import { useLocation, useNavigate } from "react-router-dom";
 import { validateForm } from "../../utils/validateForm";
 import axios from "axios";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 
 export function Signup() {
     const [feedback, setFeedback] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleClickShowConfirmPassword = () =>
+        setShowConfirmPassword((show) => !show);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -132,28 +141,72 @@ export function Signup() {
                             autoComplete="location"
                             onChange={() => setFeedback("")}
                         />
-                        <TextField
-                            margin="normal"
-                            required
+                        <FormControl
                             fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            onChange={() => setFeedback("")}
-                        />
-                        <TextField
-                            margin="normal"
+                            variant="outlined"
                             required
+                            margin="normal"
+                        >
+                            <InputLabel htmlFor="outlined-adornment-password">
+                                Password
+                            </InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-password"
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                name="password"
+                                label="Password"
+                                onChange={() => setFeedback("")}
+                            />
+                        </FormControl>
+                        <FormControl
                             fullWidth
-                            name="confirmPassword"
-                            label="Confirm Password"
-                            type="password"
-                            id="confirm-password"
-                            autoComplete="current-password"
-                            onChange={() => setFeedback("")}
-                        />
+                            variant="outlined"
+                            required
+                            margin="normal"
+                        >
+                            <InputLabel htmlFor="outlined-adornment-password">
+                                Confirm Password
+                            </InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-password"
+                                type={showConfirmPassword ? "text" : "password"}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={
+                                                handleClickShowConfirmPassword
+                                            }
+                                            edge="end"
+                                        >
+                                            {showConfirmPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                name="confirmPassword"
+                                label="Confirm Password"
+                                onChange={() => setFeedback("")}
+                            />
+                        </FormControl>
                         {/* <FormControlLabel
                             control={
                                 <Checkbox value="remember" color="primary" />
