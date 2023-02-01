@@ -14,12 +14,6 @@ import axios from "axios";
 
 export function CreateListing() {
     const [feedback, setFeedback] = useState("");
-    const [pictureObj, setPictureObj] = useState({});
-
-    const handleFileUpload = (event) => {
-        console.log(event.target.files);
-        setPictureObj(event.target.files[0]);
-    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -29,21 +23,19 @@ export function CreateListing() {
         const title = formData.get("title");
         const description = formData.get("description");
         const price = formData.get("price");
-        const picture = formData.get("picture");
+        const image = formData.get("image");
         const rules = formData.get("rules");
-        const otherRules = formData.get("otherRules");
         const location = formData.get("location");
         const beginDate = formData.get("beginDate");
         const endDate = formData.get("endDate");
         const transport = formData.get("transport");
         const ammenities = formData.get("ammenities");
-        console.log(picture);
 
         if (
             title.trim() === "" ||
             description.trim() === "" ||
             price.trim() === "" ||
-            picture.name.trim() === "" ||
+            image.name.trim() === "" ||
             rules.trim() === "" ||
             location.trim() === "" ||
             beginDate.trim() === "" ||
@@ -58,21 +50,7 @@ export function CreateListing() {
                     data: { message },
                 } = await axios.post(
                     `${process.env.REACT_APP_API_ENDPOINT}/rental/upload`,
-                    {
-                        rentalData: {
-                            title,
-                            description,
-                            price,
-                            pictureObj,
-                            rules,
-                            otherRules,
-                            location,
-                            beginDate,
-                            endDate,
-                            transport,
-                            ammenities,
-                        },
-                    },
+                    formData,
                     { withCredentials: true }
                 );
 
@@ -147,13 +125,10 @@ export function CreateListing() {
                             margin="normal"
                             required
                             fullWidth
-                            id="picture"
-                            name="picture"
+                            id="image"
+                            name="image"
                             type="file"
-                            onChange={(e) => {
-                                handleFileUpload(e);
-                                setFeedback("");
-                            }}
+                            onChange={() => setFeedback("")}
                         />
                         <MultipleCheckbox purpose="rules" label="Rules" />
                         <FormHelperText

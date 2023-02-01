@@ -33,6 +33,7 @@
     },
     "homepage": "https://github.com/mohitdhatrak/login-signup-auth#readme",
     "devDependencies": {
+        "@types/multer": "^1.4.7",
         "nodemon": "^2.0.20"
     }
 }

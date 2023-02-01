@@ -3,8 +3,9 @@ const { Rental } = require("../models/rental.model");
 const { upload } = require("../middlewares/multer.middleware");
 const router = express.Router();
 
-router.route("/upload").post(upload.single("file"), async (req, res) => {
-    const { rentalData } = req.body;
+router.post("/upload", upload.single("image"), async (req, res) => {
+    const rentalData = req.body;
+    const image = req.file ? req.file.filename : null;
     // to make each hostID unique, we add the title to it,
     // getting an error of duplicate keys if same hostID
     // we can use .includes() method to check userID from hostID
@@ -19,7 +20,11 @@ router.route("/upload").post(upload.single("file"), async (req, res) => {
         });
 
         if (!existingRental) {
-            const newRental = new Rental({ ...rentalData, hostId });
+            const newRental = new Rental({
+                ...rentalData,
+                hostId,
+                image,
+            });
             await newRental.save();
 
             res.status(200).json({

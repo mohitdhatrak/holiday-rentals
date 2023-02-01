@@ -4,10 +4,9 @@ const path = require("path");
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         console.log(file);
-        cb(null, "/images");
+        cb(null, "images");
     },
     filename: (req, file, cb) => {
-        console.log(file);
         // const format = file.mimetype.split("/")[1];
         // is this a good way to name the file? or use any other way
         // cb(null, `files/admin-${file.fieldname}-${Date.now()}.${format}`);

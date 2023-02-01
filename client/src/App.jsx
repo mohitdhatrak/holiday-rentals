@@ -13,7 +13,7 @@ import axios from "axios";
 import { Error404Page } from "./pages/Error404Page/Error404Page";
 
 export function App() {
-    const { setCurrentUser, userRole, setUserRole } = useAuth();
+    const { setCurrentUser, userRole, setUserRole, setAllListings } = useAuth();
 
     useEffect(() => {
         // perform network call like login to set current user if jwt not expired
@@ -37,6 +37,21 @@ export function App() {
                     localStorage.removeItem("currentUser");
                     localStorage.removeItem("userRole");
                 }
+            }
+        })();
+    }, []);
+
+    // to get all listings at start and save it in authContext state
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_ENDPOINT}/displayAll`,
+                    { withCredentials: true }
+                );
+                setAllListings(response.data.listings);
+            } catch (error) {
+                // console.log(error);
             }
         })();
     }, []);

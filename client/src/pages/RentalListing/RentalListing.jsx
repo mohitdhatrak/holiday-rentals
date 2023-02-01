@@ -12,28 +12,15 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Footer } from "../../components/Footer";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth-context";
 
 export function RentalListing() {
-    const [allListings, setAllListings] = useState([]);
-
     const navigate = useNavigate();
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API_ENDPOINT}/displayAll`,
-                    { withCredentials: true }
-                );
-                setAllListings(response.data.listings);
-            } catch (error) {
-                // console.log(error);
-            }
-        })();
-    }, []);
+    const { allListings } = useAuth();
 
     return (
         <ThemeProvider theme={theme}>
@@ -81,7 +68,7 @@ export function RentalListing() {
                                             // 16:9
                                             pt: "56.25%",
                                         }}
-                                        image=""
+                                        image={card.image}
                                         alt={card.title}
                                     />
                                     <CardContent sx={{ flexGrow: 1 }}>
@@ -96,10 +83,10 @@ export function RentalListing() {
                                             {card.description}
                                         </Typography>
                                     </CardContent>
-                                    {/* <CardActions>
-                                        <Button size="small">View</Button>
-                                        <Button size="small">Edit</Button>
-                                    </CardActions> */}
+                                    <CardActions>
+                                        <Button size="large">Book</Button>
+                                        {/* <Button size="small">Edit</Button> */}
+                                    </CardActions>
                                 </Card>
                             </Grid>
                         ))}

@@ -22,8 +22,9 @@ const rentalSchema = new Schema(
             type: String,
             required: [true, "House/hotel price required!"],
         },
-        picture: {
+        image: {
             type: String,
+            required: [true, "House/hotel image required!"],
         },
         // should rules be an array?
         rules: {
