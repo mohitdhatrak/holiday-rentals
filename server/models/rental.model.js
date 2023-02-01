@@ -7,7 +7,6 @@ const rentalSchema = new Schema(
         hostId: {
             // type: ObjectId,
             type: String,
-            unique: true,
             required: true,
         },
         title: {
@@ -23,7 +22,7 @@ const rentalSchema = new Schema(
             type: String,
             required: [true, "House/hotel price required!"],
         },
-        pictures: {
+        picture: {
             type: String,
         },
         // should rules be an array?

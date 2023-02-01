@@ -5,9 +5,12 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth-context";
 
 export function Home() {
     const navigate = useNavigate();
+
+    const { userRole } = useAuth();
 
     return (
         <ThemeProvider theme={theme}>
@@ -21,12 +24,29 @@ export function Home() {
                 >
                     Welcome to holiday rentals!
                 </Typography>
-                <Button
-                    variant="contained"
-                    onClick={() => navigate("/rental-listing")}
+                <Stack
+                    sx={{ pt: 4 }}
+                    direction="column"
+                    spacing={2}
+                    justifyContent="center"
                 >
-                    Explore
-                </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => navigate("/rental-listing")}
+                    >
+                        Explore
+                    </Button>
+                    {userRole === "host" || userRole === "admin" ? (
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate("/create-listing")}
+                        >
+                            Create listing
+                        </Button>
+                    ) : (
+                        ""
+                    )}
+                </Stack>
             </Stack>
         </ThemeProvider>
     );

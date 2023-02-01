@@ -8,13 +8,38 @@ import { UserRole } from "./pages/UserRole/UserRole";
 import { RentalListing } from "./pages/RentalListing/RentalListing";
 import { RentalDetail } from "./pages/RentalDetail/RentalDetail";
 import { CreateListing } from "./pages/CreateListing/CreateListing";
+import { useAuth } from "./context/auth-context";
+import axios from "axios";
+import { Error404Page } from "./pages/Error404Page/Error404Page";
 
 export function App() {
+    const { setCurrentUser, userRole, setUserRole } = useAuth();
+
     useEffect(() => {
         // perform network call like login to set current user if jwt not expired
-    }, []);
+        (async () => {
+            try {
+                const {
+                    data: { userId, message },
+                } = await axios.get(
+                    `${process.env.REACT_APP_API_ENDPOINT}/user`,
+                    { withCredentials: true }
+                );
 
-    const role = "host"; // for now
+                if (message === "Set user") {
+                    setCurrentUser(
+                        JSON.parse(localStorage.getItem("currentUser"))
+                    );
+                    setUserRole(JSON.parse(localStorage.getItem("userRole")));
+                }
+            } catch (error) {
+                if (error.response?.data.message === "Token invalid") {
+                    localStorage.removeItem("currentUser");
+                    localStorage.removeItem("userRole");
+                }
+            }
+        })();
+    }, []);
 
     return (
         <Routes>
@@ -27,18 +52,23 @@ export function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/user/role" element={<UserRole />}></Route>
             <Route path="/signup" element={<Signup />}></Route>
-            {/* this role will be saved using useReducer, after login */}
-            {role === "host" || role === "admin" ? (
-                <Route
-                    path="/create-listing"
-                    element={<CreateListing />}
-                ></Route>
+
+            {userRole === "host" || userRole === "admin" ? (
+                <>
+                    <Route
+                        path="/create-listing"
+                        element={<CreateListing />}
+                    ></Route>
+                    <Route
+                        path="/view-listing"
+                        // element={<ViewListing />}
+                    ></Route>
+                </>
             ) : (
-                {
-                    /* <Route path="*" element={<Error404Page />} /> */
-                }
+                <Route path="*" element={<Error404Page />} />
             )}
-            {/* <Route path="*" element={<Error404Page />} /> */}
+
+            <Route path="*" element={<Error404Page />} />
         </Routes>
     );
 }

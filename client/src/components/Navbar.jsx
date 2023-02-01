@@ -4,8 +4,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import Cookies from "js-cookie";
+import { useAuth } from "../context/auth-context";
+import axios from "axios";
 
 const BtnsBeforeLogin = () => {
     const navigate = useNavigate();
@@ -29,21 +29,38 @@ const BtnsBeforeLogin = () => {
     );
 };
 
-const logUserOut = (navigate) => {
-    Cookies.remove("jwtToken");
+const logUserOut = async (navigate, setCurrentUser, setUserRole) => {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("userRole");
+    setCurrentUser("");
+    setUserRole("");
+
+    try {
+        const {
+            data: { message },
+        } = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/logout`, {
+            withCredentials: true,
+        });
+
+        console.log(message);
+    } catch (error) {
+        // console.log(error);
+    }
+
     navigate("/login");
 };
 
 const BtnsAfterLogin = () => {
     const navigate = useNavigate();
+    const { setCurrentUser, setUserRole } = useAuth();
 
     return (
         <Button
             color="inherit"
             sx={{
-                color: "#27272a",
+                color: "#0f172a",
             }}
-            onClick={() => logUserOut(navigate)}
+            onClick={() => logUserOut(navigate, setCurrentUser, setUserRole)}
         >
             Logout
         </Button>
@@ -51,19 +68,7 @@ const BtnsAfterLogin = () => {
 };
 
 export function Navbar() {
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    useEffect(() => {
-        if (
-            document.cookie.includes("jwtToken") &&
-            (location.pathname === "/login" ||
-                location.pathname === "/signup" ||
-                location.pathname === "/user/role")
-        ) {
-            navigate("/");
-        }
-    }, []);
+    const { currentUser } = useAuth();
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -90,7 +95,7 @@ export function Navbar() {
                         Holiday Rentals
                     </Typography>
 
-                    {Cookies.get("jwtToken") ? (
+                    {currentUser !== "" ? (
                         <BtnsAfterLogin />
                     ) : (
                         <BtnsBeforeLogin />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navbar } from "../../components/Navbar";
 import { theme } from "../../styles";
 import Button from "@mui/material/Button";
@@ -18,10 +18,13 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import { useAuth } from "../../context/auth-context";
 
 export function Login() {
     const [feedback, setFeedback] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+
+    const { setCurrentUser, setUserRole } = useAuth();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -43,7 +46,7 @@ export function Login() {
 
             try {
                 const {
-                    data: { userId, message },
+                    data: { userId, role, message },
                 } = await axios.post(
                     `${process.env.REACT_APP_API_ENDPOINT}/login`,
                     {
@@ -55,12 +58,16 @@ export function Login() {
 
                 // setFeedback(message);
                 if (userId) {
+                    // save the user to global state here, (useContext, useReducer)
+                    localStorage.setItem("currentUser", JSON.stringify(userId));
+                    localStorage.setItem("userRole", JSON.stringify(role));
+                    setCurrentUser(userId);
+                    setUserRole(role);
                     navigate("/");
-                    // save the user to global state here, useReducer
                 }
             } catch (error) {
                 // console.log(error.response.data.message);
-                setFeedback(error.response.data.message);
+                setFeedback(error.response?.data.message);
             }
         }
     };

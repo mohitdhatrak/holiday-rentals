@@ -9,7 +9,7 @@ function requireAuth(req, res, next) {
     if (token && verifyJwtToken(token)) {
         next();
     } else {
-        res.status(401).json({ message: "Token invalid / expired" });
+        res.status(401).json({ message: "Token invalid" });
     }
 }
 

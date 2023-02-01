@@ -27,8 +27,17 @@ router.route("/").post(async (req, res) => {
                 secure: true,
             });
 
+            res.cookie("userId", newUser._id, {
+                maxAge: process.env.COOKIE_EXPIRES_IN,
+                httpOnly: true,
+                // adding samesite and secure to ensure cookies work in https
+                sameSite: "none",
+                secure: true,
+            });
+
             res.status(200).json({
                 userId: newUser._id,
+                role: newUser.role,
                 message: "Account created successfully!",
             });
         } else {

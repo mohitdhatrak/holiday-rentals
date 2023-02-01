@@ -18,11 +18,14 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import { useAuth } from "../../context/auth-context";
 
 export function Signup() {
     const [feedback, setFeedback] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const { setCurrentUser, setUserRole } = useAuth();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowConfirmPassword = () =>
@@ -52,7 +55,7 @@ export function Signup() {
 
             try {
                 const {
-                    data: { userId, message },
+                    data: { userId, role, message },
                 } = await axios.post(
                     `${process.env.REACT_APP_API_ENDPOINT}/signup`,
                     {
@@ -70,8 +73,12 @@ export function Signup() {
 
                 // setFeedback(message);
                 if (userId) {
-                    navigate("/");
                     // save the user to global state here, useReducer
+                    localStorage.setItem("currentUser", JSON.stringify(userId));
+                    localStorage.setItem("userRole", JSON.stringify(role));
+                    setCurrentUser(userId);
+                    setUserRole(role);
+                    navigate("/");
                 }
             } catch (error) {
                 // console.log(error);

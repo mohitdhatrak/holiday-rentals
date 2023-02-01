@@ -7,9 +7,11 @@ const { connectToMongoDB } = require("./db/db.connect");
 const login = require("./routers/login.router");
 const signup = require("./routers/signup.router");
 const user = require("./routers/user.router");
-const listing = require("./routers/rental.router");
+const rental = require("./routers/rental.router");
 const { requireAuth } = require("./middlewares/auth.middleware");
 const { resHeaders } = require("./middlewares/resHeader.middleware");
+const listing = require("./routers/listing.router");
+const logout = require("./routers/logout.router");
 
 const app = express();
 
@@ -35,9 +37,11 @@ connectToMongoDB();
 
 app.use("/login", resHeaders, login);
 app.use("/signup", resHeaders, signup);
+app.use("/logout", resHeaders, logout);
+app.use("/displayAll", listing);
 // app.use(requireAuth); // all routes after this are protected, can be only accessed by authenticated users
 app.use("/user", requireAuth, user);
-app.use("/upload", requireAuth, listing);
+app.use("/rental", requireAuth, rental);
 
 app.listen(process.env.PORT, () =>
     console.log(`Listening on port ${process.env.PORT}`)

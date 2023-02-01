@@ -56,6 +56,7 @@ router.route("/").post(async (req, res) => {
 
             res.status(200).json({
                 userId: user._id,
+                role: user.role,
                 message: "Logged in successfully!",
                 // jwtToken,
             });

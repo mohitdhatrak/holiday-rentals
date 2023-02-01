@@ -14,12 +14,12 @@ import axios from "axios";
 
 export function CreateListing() {
     const [feedback, setFeedback] = useState("");
-    // const [pictureObj, setPictureObj] = useState({});
+    const [pictureObj, setPictureObj] = useState({});
 
-    // const handleFileUpload = (event) => {
-    //     console.log(event.target.files[0]);
-    //     setPictureObj(event.target.files[0]);
-    // };
+    const handleFileUpload = (event) => {
+        console.log(event.target.files);
+        setPictureObj(event.target.files[0]);
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -57,13 +57,13 @@ export function CreateListing() {
                 const {
                     data: { message },
                 } = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}/upload`,
+                    `${process.env.REACT_APP_API_ENDPOINT}/rental/upload`,
                     {
                         rentalData: {
                             title,
                             description,
                             price,
-                            picture,
+                            pictureObj,
                             rules,
                             otherRules,
                             location,
@@ -151,7 +151,7 @@ export function CreateListing() {
                             name="picture"
                             type="file"
                             onChange={(e) => {
-                                // handleFileUpload(e);
+                                handleFileUpload(e);
                                 setFeedback("");
                             }}
                         />

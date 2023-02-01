@@ -3,9 +3,14 @@ const { Rental } = require("../models/rental.model");
 const { upload } = require("../middlewares/multer.middleware");
 const router = express.Router();
 
-router.route("/").post(upload.single("file"), async (req, res) => {
+router.route("/upload").post(upload.single("file"), async (req, res) => {
     const { rentalData } = req.body;
-    const hostId = req.cookies.userId;
+    // to make each hostID unique, we add the title to it,
+    // getting an error of duplicate keys if same hostID
+    // we can use .includes() method to check userID from hostID
+    const hostId = `${req.cookies.userId}${rentalData.title
+        .trim()
+        .replaceAll(" ", "_")}`;
 
     try {
         const existingRental = await Rental.findOne({
