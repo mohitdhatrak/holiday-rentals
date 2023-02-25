@@ -57,7 +57,7 @@ export function Signup() {
                 const {
                     data: { userId, role, message },
                 } = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}/signup`,
+                    `${process.env.REACT_APP_API_ENDPOINT}/user/signup`,
                     {
                         userData: {
                             name: formData.get("name"),

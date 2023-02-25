@@ -48,7 +48,7 @@ export function Login() {
                 const {
                     data: { userId, role, message },
                 } = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}/login`,
+                    `${process.env.REACT_APP_API_ENDPOINT}/user/login`,
                     {
                         email: formData.get("email"),
                         password: formData.get("password"),

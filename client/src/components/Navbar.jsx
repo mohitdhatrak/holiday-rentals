@@ -38,9 +38,12 @@ const logUserOut = async (navigate, setCurrentUser, setUserRole) => {
     try {
         const {
             data: { message },
-        } = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/logout`, {
-            withCredentials: true,
-        });
+        } = await axios.get(
+            `${process.env.REACT_APP_API_ENDPOINT}/user/logout`,
+            {
+                withCredentials: true,
+            }
+        );
 
         console.log(message);
     } catch (error) {

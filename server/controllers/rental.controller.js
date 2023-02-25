@@ -1,9 +1,17 @@
-const express = require("express");
 const { Rental } = require("../models/rental.model");
-const { upload } = require("../middlewares/multer.middleware");
-const router = express.Router();
 
-router.post("/upload", upload.single("image"), async (req, res) => {
+const allListings = async (req, res) => {
+    try {
+        const listings = await Rental.find({});
+        res.status(200).json({
+            listings: listings,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const uploadListing = async (req, res) => {
     const rentalData = req.body;
     const image = req.file ? req.file.filename : null;
     // to make each hostID unique, we add the title to it,
@@ -42,6 +50,9 @@ router.post("/upload", upload.single("image"), async (req, res) => {
             error,
         });
     }
-});
+};
 
-module.exports = router;
+module.exports = {
+    allListings,
+    uploadListing,
+};

@@ -49,7 +49,7 @@ export function CreateListing() {
                 const {
                     data: { message },
                 } = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}/rental/upload`,
+                    `${process.env.REACT_APP_API_ENDPOINT}/rental/uploadListing`,
                     formData,
                     { withCredentials: true }
                 );

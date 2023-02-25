@@ -13,7 +13,13 @@ import axios from "axios";
 import { Error404Page } from "./pages/Error404Page/Error404Page";
 
 export function App() {
-    const { setCurrentUser, userRole, setUserRole, setAllListings } = useAuth();
+    const {
+        currentUser,
+        setCurrentUser,
+        userRole,
+        setUserRole,
+        setAllListings,
+    } = useAuth();
 
     useEffect(() => {
         // perform network call like login to set current user if jwt not expired
@@ -46,7 +52,7 @@ export function App() {
         (async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_API_ENDPOINT}/displayAll`,
+                    `${process.env.REACT_APP_API_ENDPOINT}/rental/viewListing`,
                     { withCredentials: true }
                 );
                 setAllListings(response.data.listings);
@@ -64,9 +70,16 @@ export function App() {
                 path="/rental-detail/:rentalId"
                 element={<RentalDetail />}
             ></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/user/role" element={<UserRole />}></Route>
-            <Route path="/signup" element={<Signup />}></Route>
+
+            {currentUser === "" ? (
+                <>
+                    <Route path="/login" element={<Login />}></Route>
+                    <Route path="/user/role" element={<UserRole />}></Route>
+                    <Route path="/signup" element={<Signup />}></Route>
+                </>
+            ) : (
+                <Route path="*" element={<Error404Page />} />
+            )}
 
             {userRole === "host" || userRole === "admin" ? (
                 <>

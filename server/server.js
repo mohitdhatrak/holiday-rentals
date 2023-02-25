@@ -4,14 +4,8 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const { connectToMongoDB } = require("./db/db.connect");
-const login = require("./routers/login.router");
-const signup = require("./routers/signup.router");
-const user = require("./routers/user.router");
-const rental = require("./routers/rental.router");
-const { requireAuth } = require("./middlewares/auth.middleware");
-const { resHeaders } = require("./middlewares/resHeader.middleware");
-const listing = require("./routers/listing.router");
-const logout = require("./routers/logout.router");
+const user = require("./routes/user.route");
+const rental = require("./routes/rental.route");
 
 const app = express();
 
@@ -35,13 +29,8 @@ if (process.env.NODE_ENV === "development") {
 
 connectToMongoDB();
 
-app.use("/login", resHeaders, login);
-app.use("/signup", resHeaders, signup);
-app.use("/logout", resHeaders, logout);
-app.use("/displayAll", listing);
-// app.use(requireAuth); // all routes after this are protected, can be only accessed by authenticated users
-app.use("/user", requireAuth, user);
-app.use("/rental", requireAuth, rental);
+app.use("/user", user);
+app.use("/rental", rental);
 
 app.listen(process.env.PORT, () =>
     console.log(`Listening on port ${process.env.PORT}`)
