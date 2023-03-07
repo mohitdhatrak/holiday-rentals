@@ -1,4 +1,6 @@
-export function validateForm(data, setFeedback, formType) {
+import { toast } from "react-toastify";
+
+export function validateForm(data, formType) {
     const email = data.get("email");
     const password = data.get("password");
     const name = data.get("name");
@@ -19,7 +21,7 @@ export function validateForm(data, setFeedback, formType) {
         password.trim() === "" ||
         confirmPassword?.trim() === ""
     ) {
-        setFeedback("Please fill all compulsory fields!");
+        toast.error("Please fill all compulsory fields!");
         return false;
     } else if (
         !regexEmail.test(email.trim()) ||
@@ -30,25 +32,25 @@ export function validateForm(data, setFeedback, formType) {
         email.includes(".@") ||
         email.includes("@-")
     ) {
-        setFeedback("Please enter a valid email!");
+        toast.error("Please enter a valid email!");
         return false;
     } else if (
         formType === "signup" &&
         phone?.trim() !== "" &&
         !regexPhone.test(phone?.trim())
     ) {
-        setFeedback("Please enter a valid phone number!");
+        toast.error("Please enter a valid phone number!");
         return false;
     } else if (password.trim().length < 8) {
-        setFeedback("Password must be atleast 8 characters long!");
+        toast.error("Password must be atleast 8 characters long!");
         return false;
     } else if (!regexPassword.test(password.trim())) {
-        setFeedback(
+        toast.error(
             "Password must contain atleast 1 special character, 1 numeric value and 1 uppercase & lowercase letter each!"
         );
         return false;
     } else if (formType === "signup" && password !== confirmPassword) {
-        setFeedback("Passwords don't match!");
+        toast.error("Passwords don't match!");
         return false;
     }
 

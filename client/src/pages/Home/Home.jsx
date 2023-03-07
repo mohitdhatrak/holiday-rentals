@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth-context";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function Home() {
     const navigate = useNavigate();
@@ -47,6 +49,7 @@ export function Home() {
                         ""
                     )}
                 </Stack>
+                <ToastContainer />
             </Stack>
         </ThemeProvider>
     );

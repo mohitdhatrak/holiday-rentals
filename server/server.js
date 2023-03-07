@@ -4,8 +4,8 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const { connectToMongoDB } = require("./db/db.connect");
-const user = require("./routes/user.route");
-const rental = require("./routes/rental.route");
+const userRouter = require("./routes/user.route");
+const rentalRouter = require("./routes/rental.route");
 
 const app = express();
 
@@ -29,8 +29,14 @@ if (process.env.NODE_ENV === "development") {
 
 connectToMongoDB();
 
-app.use("/user", user);
-app.use("/rental", rental);
+app.use("/user", userRouter);
+app.use("/rental", rentalRouter);
+
+app.use((req, res) => {
+    res.status(404).json({
+        message: "Error: No match for API endpoint",
+    });
+});
 
 app.listen(process.env.PORT, () =>
     console.log(`Listening on port ${process.env.PORT}`)

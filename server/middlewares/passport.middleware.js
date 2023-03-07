@@ -1,6 +1,5 @@
 const GoogleStrategy = require("passport-google-oauth20");
 const { User } = require("../models/user.model");
-require("dotenv").config();
 
 passport.use(
     new GoogleStrategy(

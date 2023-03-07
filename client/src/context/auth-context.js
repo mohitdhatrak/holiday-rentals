@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState("");
     const [userRole, setUserRole] = useState("");
     const [allListings, setAllListings] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     return (
         <AuthContext.Provider
@@ -18,6 +19,8 @@ export const AuthProvider = ({ children }) => {
                 setUserRole,
                 allListings,
                 setAllListings,
+                loading,
+                setLoading,
             }}
         >
             {children}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { theme } from "../../styles";
 import { Navbar } from "../../components/Navbar";
 import Button from "@mui/material/Button";
@@ -11,9 +10,15 @@ import Stack from "@mui/material/Stack";
 import { MultipleCheckbox } from "../../components/MultipleCheckbox";
 import FormHelperText from "@mui/material/FormHelperText";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth-context";
+import { toast } from "react-toastify";
+import { Upload } from "../../components/Upload";
 
 export function CreateListing() {
-    const [feedback, setFeedback] = useState("");
+    const navigate = useNavigate();
+
+    const { setAllListings } = useAuth();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -31,6 +36,8 @@ export function CreateListing() {
         const transport = formData.get("transport");
         const ammenities = formData.get("ammenities");
 
+        console.log(image);
+
         if (
             title.trim() === "" ||
             description.trim() === "" ||
@@ -43,21 +50,35 @@ export function CreateListing() {
             transport.trim() === "" ||
             ammenities.trim() === ""
         ) {
-            setFeedback("Please fill all compulsory fields!");
+            toast.error("Please fill all compulsory fields!");
         } else {
             try {
                 const {
                     data: { message },
                 } = await axios.post(
-                    `${process.env.REACT_APP_API_ENDPOINT}/rental/uploadListing`,
+                    `${process.env.REACT_APP_API_ENDPOINT}/rental/listing`,
                     formData,
                     { withCredentials: true }
                 );
 
-                // setFeedback(message);
+                if (message === "Listing added successfully!") {
+                    toast.success(message);
+                    // network call to get all listings and add to context
+                    try {
+                        const response = await axios.get(
+                            `${process.env.REACT_APP_API_ENDPOINT}/rental/listing`,
+                            { withCredentials: true }
+                        );
+                        setAllListings(response.data.listings);
+                    } catch (error) {
+                        // console.log(error);
+                    }
+                    navigate("/");
+                } else {
+                    toast.error(message);
+                }
             } catch (error) {
-                // console.log(error.response.data.message);
-                // setFeedback(error.response.data.message);
+                toast.error(error?.response?.data?.message);
             }
         }
     };
@@ -92,7 +113,6 @@ export function CreateListing() {
                             id="title"
                             label="Title"
                             name="title"
-                            onChange={() => setFeedback("")}
                             autoFocus
                         />
                         <TextField
@@ -104,7 +124,6 @@ export function CreateListing() {
                             id="description"
                             label="Description"
                             name="description"
-                            onChange={() => setFeedback("")}
                         />
                         <TextField
                             margin="normal"
@@ -113,7 +132,6 @@ export function CreateListing() {
                             id="price"
                             label="Price per night"
                             name="price"
-                            onChange={() => setFeedback("")}
                         />
                         <FormHelperText
                             id="component-helper-text"
@@ -128,8 +146,8 @@ export function CreateListing() {
                             id="image"
                             name="image"
                             type="file"
-                            onChange={() => setFeedback("")}
                         />
+                        <Upload />
                         <MultipleCheckbox purpose="rules" label="Rules" />
                         <FormHelperText
                             id="component-helper-text"
@@ -143,7 +161,6 @@ export function CreateListing() {
                             id="otherRules"
                             label="Other rules"
                             name="otherRules"
-                            onChange={() => setFeedback("")}
                         />
                         <TextField
                             margin="normal"
@@ -152,7 +169,6 @@ export function CreateListing() {
                             id="location"
                             label="Location"
                             name="location"
-                            onChange={() => setFeedback("")}
                         />
                         {/* availability dates */}
                         <FormHelperText
@@ -168,7 +184,6 @@ export function CreateListing() {
                             type="date"
                             id="beginDate"
                             name="beginDate"
-                            onChange={() => setFeedback("")}
                         />
                         <FormHelperText
                             id="component-helper-text"
@@ -183,7 +198,6 @@ export function CreateListing() {
                             type="date"
                             id="endDate"
                             name="endDate"
-                            onChange={() => setFeedback("")}
                         />
                         <FormHelperText
                             id="component-helper-text"
@@ -199,17 +213,20 @@ export function CreateListing() {
                             purpose="ammenities"
                             label="Ammenities"
                         />
+                        <FormHelperText
+                            id="component-helper-text"
+                            sx={{ ml: 1, mb: -1 }}
+                        >
+                            Add other ammenities, separate by comma
+                        </FormHelperText>
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="otherAmmenities"
+                            label="Other ammenities"
+                            name="otherAmmenities"
+                        />
                         <Stack spacing={2} alignItems="center" sx={{ mb: 10 }}>
-                            {feedback === "" ? (
-                                ""
-                            ) : (
-                                <Typography
-                                    variant="body1"
-                                    sx={{ mt: 1, color: "red" }}
-                                >
-                                    {feedback}
-                                </Typography>
-                            )}
                             <Button
                                 type="submit"
                                 fullWidth

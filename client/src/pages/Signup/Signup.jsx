@@ -19,9 +19,9 @@ import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { useAuth } from "../../context/auth-context";
+import { toast } from "react-toastify";
 
 export function Signup() {
-    const [feedback, setFeedback] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -34,8 +34,10 @@ export function Signup() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [role, setRole] = useState(location.state);
+
     useEffect(() => {
-        if (location.state === null) {
+        if (role === null) {
             navigate("/user/role"); // still problem when user hits previous page or next page using browser arrows
             // solve this issue in useeffect of UserRole page
         } else {
@@ -48,41 +50,37 @@ export function Signup() {
 
         const formData = new FormData(event.currentTarget);
 
-        const isValid = validateForm(formData, setFeedback, "signup");
+        const isValid = validateForm(formData, "signup");
 
         if (isValid) {
             // frontend validation done, all fields are valid, do further process here
-
             try {
                 const {
-                    data: { userId, role, message },
+                    data: { userId, userRole, message },
                 } = await axios.post(
                     `${process.env.REACT_APP_API_ENDPOINT}/user/signup`,
                     {
-                        userData: {
-                            name: formData.get("name"),
-                            email: formData.get("email"),
-                            phone: formData.get("phone"),
-                            location: formData.get("location"),
-                            password: formData.get("password"),
-                            role: location.state,
-                        },
+                        name: formData.get("name"),
+                        email: formData.get("email"),
+                        phone: formData.get("phone"),
+                        location: formData.get("location"),
+                        password: formData.get("password"),
+                        role: role,
                     },
                     { withCredentials: true }
                 );
 
-                // setFeedback(message);
                 if (userId) {
                     // save the user to global state here, useReducer
-                    localStorage.setItem("currentUser", JSON.stringify(userId));
-                    localStorage.setItem("userRole", JSON.stringify(role));
                     setCurrentUser(userId);
                     setUserRole(role);
+                    toast.success(message);
                     navigate("/");
+                } else {
+                    toast.error(message);
                 }
             } catch (error) {
-                // console.log(error);
-                setFeedback(error.response.data.message);
+                toast.error(error?.response?.data?.message);
             }
         }
     };
@@ -117,7 +115,6 @@ export function Signup() {
                             label="Name"
                             name="name"
                             autoComplete="name"
-                            onChange={() => setFeedback("")}
                             autoFocus
                         />
                         <TextField
@@ -128,7 +125,6 @@ export function Signup() {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            onChange={() => setFeedback("")}
                         />
                         <TextField
                             margin="normal"
@@ -137,7 +133,6 @@ export function Signup() {
                             label="Phone Number"
                             name="phone"
                             autoComplete="phone"
-                            onChange={() => setFeedback("")}
                         />
                         <TextField
                             margin="normal"
@@ -146,7 +141,6 @@ export function Signup() {
                             label="Location"
                             name="location"
                             autoComplete="location"
-                            onChange={() => setFeedback("")}
                         />
                         <FormControl
                             fullWidth
@@ -177,7 +171,6 @@ export function Signup() {
                                 }
                                 name="password"
                                 label="Password"
-                                onChange={() => setFeedback("")}
                             />
                         </FormControl>
                         <FormControl
@@ -211,7 +204,6 @@ export function Signup() {
                                 }
                                 name="confirmPassword"
                                 label="Confirm Password"
-                                onChange={() => setFeedback("")}
                             />
                         </FormControl>
                         {/* <FormControlLabel
@@ -221,16 +213,6 @@ export function Signup() {
                             label="Remember me"
                         /> */}
                         <Stack spacing={2} alignItems="center">
-                            {feedback === "" ? (
-                                ""
-                            ) : (
-                                <Typography
-                                    variant="body1"
-                                    sx={{ mt: 1, color: "red" }}
-                                >
-                                    {feedback}
-                                </Typography>
-                            )}
                             <Button
                                 type="submit"
                                 fullWidth

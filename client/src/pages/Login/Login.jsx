@@ -19,9 +19,9 @@ import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { useAuth } from "../../context/auth-context";
+import { toast } from "react-toastify";
 
 export function Login() {
-    const [feedback, setFeedback] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
     const { setCurrentUser, setUserRole } = useAuth();
@@ -39,7 +39,7 @@ export function Login() {
 
         const formData = new FormData(event.currentTarget);
 
-        const isValid = validateForm(formData, setFeedback, "login");
+        const isValid = validateForm(formData, "login");
 
         if (isValid) {
             // frontend validation done, all fields are valid, do further process here
@@ -56,18 +56,17 @@ export function Login() {
                     { withCredentials: true }
                 );
 
-                // setFeedback(message);
                 if (userId) {
                     // save the user to global state here, (useContext, useReducer)
-                    localStorage.setItem("currentUser", JSON.stringify(userId));
-                    localStorage.setItem("userRole", JSON.stringify(role));
                     setCurrentUser(userId);
                     setUserRole(role);
+                    toast.success(message);
                     navigate("/");
+                } else {
+                    toast.error(message);
                 }
             } catch (error) {
-                // console.log(error.response.data.message);
-                setFeedback(error.response?.data.message);
+                toast.error(error?.response?.data?.message);
             }
         }
     };
@@ -103,7 +102,6 @@ export function Login() {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            onChange={() => setFeedback("")}
                         />
                         <FormControl
                             fullWidth
@@ -137,7 +135,6 @@ export function Login() {
                                 }
                                 name="password"
                                 label="Password"
-                                onChange={() => setFeedback("")}
                             />
                         </FormControl>
                         {/* <FormControlLabel
@@ -147,16 +144,6 @@ export function Login() {
                             label="Remember me"
                         /> */}
                         <Stack spacing={2} alignItems="center">
-                            {feedback === "" ? (
-                                ""
-                            ) : (
-                                <Typography
-                                    variant="body1"
-                                    sx={{ mt: 1, color: "red" }}
-                                >
-                                    {feedback}
-                                </Typography>
-                            )}
                             <Button
                                 type="submit"
                                 fullWidth

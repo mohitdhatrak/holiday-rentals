@@ -2,7 +2,7 @@ const { User } = require("../models/user.model");
 const { createJwtToken } = require("../utils/createJwtToken");
 
 const signup = async (req, res) => {
-    const { userData } = req.body;
+    const userData = req.body;
 
     try {
         const existingUser = await User.findOne({
@@ -38,7 +38,7 @@ const signup = async (req, res) => {
             });
         } else {
             res.status(400).json({
-                message: "This email is already registered!",
+                message: "This email is already registered, try logging in!",
             });
         }
     } catch (error) {
@@ -56,7 +56,7 @@ const login = async (req, res) => {
     try {
         const user = await User.login(email, password); // using the static method login we created in User model
         if (user === 401) {
-            throw new Error("Password is incorrect!");
+            throw new Error("Incorrect password!");
         } else if (user === 404) {
             throw new Error(
                 "This email is not registered, user does not exist!"
@@ -113,17 +113,17 @@ const logout = async (req, res) => {
     });
 
     res.status(200).json({
-        message: "User logged out successfully",
+        message: "User logged out!",
     });
 };
 
 const getUser = async (req, res) => {
-    // const user = await User.findOne({
-    //     _id: req.cookies.userId,
-    // });
+    const currentUser = await req.user; // need to use await here?
+    // console.log(currentUser);
 
     res.status(200).json({
-        // userId: user._id,
+        userId: currentUser._id,
+        role: currentUser.role,
         message: "Set user",
     });
 };

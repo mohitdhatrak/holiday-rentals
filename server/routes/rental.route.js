@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const rentalRouter = express.Router();
 
 const {
     allListings,
@@ -8,11 +8,11 @@ const {
 const { requireAuth } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/multer.middleware");
 
-router.get("/viewListing", allListings);
-router.post(
-    "/uploadListing",
-    [requireAuth, upload.single("image")],
-    uploadListing
-);
+rentalRouter
+    .route("/listing")
+    .get(allListings)
+    .post([requireAuth, upload.single("image")], uploadListing);
 
-module.exports = router;
+// requireAuth not needed above as we are checking auth already, this endpoint can be accessed in frontend by authenticated users (host or admin) only
+
+module.exports = rentalRouter;

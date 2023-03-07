@@ -19,11 +19,29 @@ const uploadListing = async (req, res) => {
     // we can use .includes() method to check userID from hostID
     const hostId = `${req.cookies.userId}${rentalData.title
         .trim()
+        .toLowerCase()
         .replaceAll(" ", "_")}`;
+
+    // adding other rules to the rules list in model
+    // we can also make another field called customRules in model and add these there
+    const otherRulesArray = rentalData.otherRules.split(",");
+    for (let i = 0; i < otherRulesArray.length; i++) {
+        otherRulesArray[i] = otherRulesArray[i].trim();
+    }
+    const otherRules = otherRulesArray.join(",");
+    const finalRules = rentalData.rules + "," + otherRules;
+
+    // adding other ammenities to the ammenities list in model
+    const otherAmmenitiesArray = rentalData.otherAmmenities.split(",");
+    for (let i = 0; i < otherAmmenitiesArray.length; i++) {
+        otherAmmenitiesArray[i] = otherAmmenitiesArray[i].trim();
+    }
+    const otherAmmenities = otherAmmenitiesArray.join(",");
+    const finalAmmenities = rentalData.rules + "," + otherAmmenities;
 
     try {
         const existingRental = await Rental.findOne({
-            title: rentalData.title,
+            // title: rentalData.title, // hostId has title concatenated
             hostId,
         });
 
@@ -32,11 +50,13 @@ const uploadListing = async (req, res) => {
                 ...rentalData,
                 hostId,
                 image,
+                rules: finalRules,
+                ammenities: finalAmmenities,
             });
             await newRental.save();
 
             res.status(200).json({
-                message: "Rental Listing created successfully!",
+                message: "Listing added successfully!",
             });
         } else {
             res.status(400).json({

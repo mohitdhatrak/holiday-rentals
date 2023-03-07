@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const BtnsBeforeLogin = () => {
     const navigate = useNavigate();
@@ -30,8 +31,6 @@ const BtnsBeforeLogin = () => {
 };
 
 const logUserOut = async (navigate, setCurrentUser, setUserRole) => {
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("userRole");
     setCurrentUser("");
     setUserRole("");
 
@@ -45,9 +44,9 @@ const logUserOut = async (navigate, setCurrentUser, setUserRole) => {
             }
         );
 
-        console.log(message);
+        toast(message);
     } catch (error) {
-        // console.log(error);
+        toast.error(error?.response?.data?.message);
     }
 
     navigate("/login");
